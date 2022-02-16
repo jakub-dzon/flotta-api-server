@@ -406,6 +406,7 @@ honnef.co/go/tools/stylecheck
 honnef.co/go/tools/unused
 honnef.co/go/tools/unused/typemap
 # k8s.io/api v0.21.2
+## explicit
 k8s.io/api/admission/v1
 k8s.io/api/admission/v1beta1
 k8s.io/api/admissionregistration/v1
@@ -884,7 +885,7 @@ k8s.io/utils/trace
 # sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.19
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/pkg/client
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/proto/client
-# sigs.k8s.io/apiserver-runtime v1.0.2
+# sigs.k8s.io/apiserver-runtime v1.0.2 => github.com/jakub-dzon/apiserver-runtime v1.0.3-0.20220216125922-1657cdadd1a0
 ## explicit
 sigs.k8s.io/apiserver-runtime/internal/sample-apiserver/pkg/apiserver
 sigs.k8s.io/apiserver-runtime/internal/sample-apiserver/pkg/cmd/server
@@ -904,3 +905,4 @@ sigs.k8s.io/structured-merge-diff/v4/typed
 sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
+# sigs.k8s.io/apiserver-runtime => github.com/jakub-dzon/apiserver-runtime v1.0.3-0.20220216125922-1657cdadd1a0

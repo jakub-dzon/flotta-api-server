@@ -17,9 +17,11 @@ limitations under the License.
 package main
 
 import (
-	"github.com/kelseyhightower/envconfig"
 	"github.com/jakub-dzon/flotta-apiserver/api/v1alpha1"
 	"github.com/jakub-dzon/flotta-apiserver/pkg/registry"
+	"github.com/kelseyhightower/envconfig"
+	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/klog"
 	// load all auth plugins
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -33,6 +35,15 @@ var DBConfig struct {
 	Password string `envconfig:"PASSWORD"`
 }
 
+var (
+	scheme = runtime.NewScheme()
+)
+
+func init() {
+	utilruntime.Must(v1alpha1.AddToScheme(scheme))
+	// +kubebuilder:scaffold:scheme
+}
+
 func main() {
 	err := envconfig.Process("DB", &DBConfig)
 	if err != nil {
@@ -41,6 +52,7 @@ func main() {
 	store := registry.NewStore(DBConfig.Host, DBConfig.Port, DBConfig.Username, DBConfig.Password)
 	err = builder.APIServer.
 		WithResourceAndStorage(&v1alpha1.EdgeDevice{}, store).
+		WithResourceAndStorage(&v1alpha1.EdgeDeployment{}, store).
 		WithLocalDebugExtension().
 		WithOptionsFns(func(options *builder.ServerOptions) *builder.ServerOptions {
 			options.RecommendedOptions.CoreAPI = nil

@@ -126,7 +126,12 @@ func (a *Server) WithResourceAndHandler(obj resource.Object, sp rest.ResourceHan
 func (a *Server) WithResourceAndStorage(obj resource.Object, fn rest.StoreFn) *Server {
 	gvr := obj.GetGroupVersionResource()
 	a.schemeBuilder.Register(resource.AddToScheme(obj))
-	return a.forGroupVersionResource(gvr, rest.NewWithFn(obj, fn))
+	parentProvider := rest.NewWithFn(obj, fn)
+
+	versionResource := a.forGroupVersionResource(gvr, parentProvider)
+	a.withSubResourceIfExists(obj, parentProvider)
+
+	return versionResource
 }
 
 // forGroupVersionResource manually registers storage for a specific resource.

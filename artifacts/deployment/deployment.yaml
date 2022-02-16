@@ -30,7 +30,11 @@ spec:
           - name: DB_PASSWORD
             value: "N98azs0gJk"
         args:
+#        - --etcd-servers=http://localhost:2379
         - --etcd-servers=unix://kine.sock
         - --cert-dir=/tmp/certs
         - --secure-port=8443
         - --v=4
+#      - name: etcd
+#        image: quay.io/coreos/etcd:v3.2.24
+#        workingDir: /tmp

@@ -20,6 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"sigs.k8s.io/apiserver-runtime/pkg/builder/resource"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -380,14 +381,12 @@ type SystemVendor struct {
 	Virtual bool `json:"virtual,omitempty"`
 }
 
-type NameRef struct {
-	Name string `json:"name"`
-}
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// EdgeDevice is the Schema for the edgedevices API
+// EdgeDevice
+// +k8s:openapi-gen=true
 type EdgeDevice struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -396,39 +395,62 @@ type EdgeDevice struct {
 	Status EdgeDeviceStatus `json:"status,omitempty"`
 }
 
-func (ed *EdgeDevice) GetObjectMeta() *metav1.ObjectMeta {
-	return &ed.ObjectMeta
+func (in *EdgeDevice) GetObjectMeta() *metav1.ObjectMeta {
+	return &in.ObjectMeta
 }
 
-func (ed *EdgeDevice) NamespaceScoped() bool {
+func (in *EdgeDevice) NamespaceScoped() bool {
 	return true
 }
 
-func (ed *EdgeDevice) New() runtime.Object {
+func (in *EdgeDevice) New() runtime.Object {
 	return &EdgeDevice{}
 }
 
-func (ed *EdgeDevice) NewList() runtime.Object {
+func (in *EdgeDevice) NewList() runtime.Object {
 	return &EdgeDeviceList{}
 }
 
-func (ed *EdgeDevice) GetGroupVersionResource() schema.GroupVersionResource {
+func (in *EdgeDevice) GetGroupVersionResource() schema.GroupVersionResource {
 	return schema.GroupVersionResource{
-		Group:    GroupVersion.Group,
-		Version:  GroupVersion.Version,
+		Group:   "management.project-flotta.io",
+		Version: "v1alpha1",
 		Resource: "edgedevices",
 	}
 }
 
-func (ed *EdgeDevice) IsStorageVersion() bool {
+func (in *EdgeDevice) IsStorageVersion() bool {
 	return true
 }
 
-//+kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // EdgeDeviceList contains a list of EdgeDevice
 type EdgeDeviceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []EdgeDevice `json:"items"`
+}
+
+var _ resource.ObjectList = &EdgeDeviceList{}
+
+func (in *EdgeDeviceList) GetListMeta() *metav1.ListMeta {
+	return &in.ListMeta
+}
+
+func (in EdgeDeviceStatus) SubResourceName() string {
+	return "status"
+}
+
+// EdgeDevice implements ObjectWithStatusSubResource interface.
+var _ resource.ObjectWithStatusSubResource = &EdgeDevice{}
+// EdgeDeviceStatus{} implements StatusSubResource interface.
+var _ resource.StatusSubResource = &EdgeDeviceStatus{}
+
+func (in *EdgeDevice) GetStatus() resource.StatusSubResource {
+	return in.Status
+}
+
+func (in EdgeDeviceStatus) CopyTo(parent resource.ObjectWithStatusSubResource) {
+	parent.(*EdgeDevice).Status = in
 }

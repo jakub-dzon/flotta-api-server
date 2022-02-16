@@ -13,17 +13,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-// Package v1alpha1 contains API Schema definitions for the management v1alpha1 API group
-//+kubebuilder:object:generate=true
-//+groupName=management.project-flotta.io
-package v1alpha1
-
-import (
-	"k8s.io/apimachinery/pkg/runtime/schema"
-)
-
-var (
-	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "devices.project-flotta.io", Version: "v1alpha1"}
-)

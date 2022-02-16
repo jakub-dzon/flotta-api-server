@@ -52,17 +52,19 @@ func (k *KineRESTOptionsGetter) GetRESTOptions(resource schema.GroupResource) (g
 	}
 	etcdConfig, err := endpoint.Listen(context.TODO(), endpoint.Config{
 		Endpoint: fmt.Sprintf("postgres://%s:%d/kine?user=%s&password=%s&sslmode=disable", k.host, k.port, k.username, k.password),
+
 	})
 
 	restOptions.StorageConfig.Transport.ServerList = etcdConfig.Endpoints
 	restOptions.StorageConfig.Transport.TrustedCAFile = etcdConfig.TLSConfig.CAFile
 	restOptions.StorageConfig.Transport.CertFile = etcdConfig.TLSConfig.CertFile
 	restOptions.StorageConfig.Transport.KeyFile = etcdConfig.TLSConfig.KeyFile
+
 	return restOptions, nil
 }
 
 func NewStore(host string, port int32, username, password string) rest.StoreFn {
-	return func(_ *genericregistry.Store, options *generic.StoreOptions) {
+	return func(store *genericregistry.Store, options *generic.StoreOptions) {
 		options.RESTOptions = NewKineRESTOptionsGetter(options.RESTOptions, host, port, username, password)
 	}
 }
