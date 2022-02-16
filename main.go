@@ -17,39 +17,28 @@ limitations under the License.
 package main
 
 import (
-	"github.com/kelseyhightower/envconfig"
-	"github.com/jakub-dzon/flotta-apiserver/api/v1alpha1"
-	"github.com/jakub-dzon/flotta-apiserver/pkg/registry"
+	"flag"
+
 	"k8s.io/klog"
+
+	genericapiserver "k8s.io/apiserver/pkg/server"
+	"k8s.io/component-base/logs"
+
+	"github.com/programming-kubernetes/pizza-apiserver/pkg/cmd/server"
+
 	// load all auth plugins
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
-	"sigs.k8s.io/apiserver-runtime/pkg/builder"
 )
 
-var DBConfig struct {
-	Host     string `envconfig:"HOST" default:"postgres-postgresql.default"`
-	Port     int32  `envconfig:"PORT" default:"5432"`
-	Username string `envconfig:"USERNAME" default:"postgres"`
-	Password string `envconfig:"PASSWORD"`
-}
-
 func main() {
-	err := envconfig.Process("DB", &DBConfig)
-	if err != nil {
-		klog.Fatal(err, "unable to process configuration values")
-	}
-	store := registry.NewStore(DBConfig.Host, DBConfig.Port, DBConfig.Username, DBConfig.Password)
-	err = builder.APIServer.
-		WithResourceAndStorage(&v1alpha1.EdgeDevice{}, store).
-		WithLocalDebugExtension().
-		WithOptionsFns(func(options *builder.ServerOptions) *builder.ServerOptions {
-			options.RecommendedOptions.CoreAPI = nil
-			options.RecommendedOptions.Admission = nil
-			return options
-		}).
-		Execute()
+	logs.InitLogs()
+	defer logs.FlushLogs()
 
-	if err != nil {
+	stopCh := genericapiserver.SetupSignalHandler()
+	options := server.NewCustomServerOptions()
+	cmd := server.NewCommandStartCustomServer(options, stopCh)
+	cmd.Flags().AddGoFlagSet(flag.CommandLine)
+	if err := cmd.Execute(); err != nil {
 		klog.Fatal(err)
 	}
 }

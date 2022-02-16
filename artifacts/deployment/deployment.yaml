@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flotta-apiserver
-  namespace: flotta
+  name: pizza-apiserver
+  namespace: pizza-apiserver
   labels:
     apiserver: "true"
 spec:
@@ -20,17 +20,12 @@ spec:
       - name: apiserver
         image: quay.io/jdzon/flotta-api-server:latest
         imagePullPolicy: Always
-        env:
-          - name: DB_HOST
-            value: "postgres-postgresql.default"
-          - name: DB_PORT
-            value: "5432"
-          - name: DB_USERNAME
-            value: "postgres"
-          - name: DB_PASSWORD
-            value: "N98azs0gJk"
+        command: ["/pizza-apiserver"]
         args:
-        - --etcd-servers=unix://kine.sock
+        - --etcd-servers=http://localhost:2379
         - --cert-dir=/tmp/certs
         - --secure-port=8443
         - --v=4
+      - name: etcd
+        image: quay.io/coreos/etcd:v3.2.24
+        workingDir: /tmp
