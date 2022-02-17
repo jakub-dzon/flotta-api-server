@@ -92,7 +92,6 @@ github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
 # github.com/google/gofuzz v1.1.0
-## explicit
 github.com/google/gofuzz
 # github.com/google/uuid v1.1.2
 github.com/google/uuid
@@ -119,6 +118,9 @@ github.com/inconshreveable/mousetrap
 ## explicit
 # github.com/json-iterator/go v1.1.10
 github.com/json-iterator/go
+# github.com/kelseyhightower/envconfig v1.4.0
+## explicit
+github.com/kelseyhightower/envconfig
 # github.com/lib/pq v1.9.0
 ## explicit
 github.com/lib/pq
@@ -236,7 +238,6 @@ golang.org/x/crypto/salsa20/salsa
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/mod v0.4.2
-golang.org/x/mod/module
 golang.org/x/mod/semver
 # golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 golang.org/x/net/context
@@ -289,16 +290,12 @@ golang.org/x/tools/go/loader
 golang.org/x/tools/go/packages
 golang.org/x/tools/go/types/objectpath
 golang.org/x/tools/go/types/typeutil
-golang.org/x/tools/imports
 golang.org/x/tools/internal/analysisinternal
 golang.org/x/tools/internal/event
 golang.org/x/tools/internal/event/core
 golang.org/x/tools/internal/event/keys
 golang.org/x/tools/internal/event/label
-golang.org/x/tools/internal/fastwalk
 golang.org/x/tools/internal/gocommand
-golang.org/x/tools/internal/gopathwalk
-golang.org/x/tools/internal/imports
 golang.org/x/tools/internal/lsp/fuzzy
 golang.org/x/tools/internal/packagesinternal
 golang.org/x/tools/internal/typeparams
@@ -438,6 +435,7 @@ honnef.co/go/tools/stylecheck
 honnef.co/go/tools/unused
 honnef.co/go/tools/unused/typemap
 # k8s.io/api v0.21.2
+## explicit
 k8s.io/api/admission/v1
 k8s.io/api/admission/v1beta1
 k8s.io/api/admissionregistration/v1
@@ -485,16 +483,12 @@ k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
 # k8s.io/apimachinery v0.21.2
 ## explicit
-k8s.io/apimachinery/pkg/api/apitesting
-k8s.io/apimachinery/pkg/api/apitesting/fuzzer
-k8s.io/apimachinery/pkg/api/apitesting/roundtrip
 k8s.io/apimachinery/pkg/api/equality
 k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/api/meta
 k8s.io/apimachinery/pkg/api/resource
 k8s.io/apimachinery/pkg/api/validation
 k8s.io/apimachinery/pkg/api/validation/path
-k8s.io/apimachinery/pkg/apis/meta/fuzzer
 k8s.io/apimachinery/pkg/apis/meta/internalversion
 k8s.io/apimachinery/pkg/apis/meta/internalversion/scheme
 k8s.io/apimachinery/pkg/apis/meta/internalversion/validation
@@ -887,41 +881,6 @@ k8s.io/client-go/util/homedir
 k8s.io/client-go/util/jsonpath
 k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/workqueue
-# k8s.io/code-generator v0.21.2
-## explicit
-k8s.io/code-generator
-k8s.io/code-generator/cmd/client-gen
-k8s.io/code-generator/cmd/client-gen/args
-k8s.io/code-generator/cmd/client-gen/generators
-k8s.io/code-generator/cmd/client-gen/generators/fake
-k8s.io/code-generator/cmd/client-gen/generators/scheme
-k8s.io/code-generator/cmd/client-gen/generators/util
-k8s.io/code-generator/cmd/client-gen/path
-k8s.io/code-generator/cmd/client-gen/types
-k8s.io/code-generator/cmd/conversion-gen
-k8s.io/code-generator/cmd/conversion-gen/args
-k8s.io/code-generator/cmd/conversion-gen/generators
-k8s.io/code-generator/cmd/deepcopy-gen
-k8s.io/code-generator/cmd/deepcopy-gen/args
-k8s.io/code-generator/cmd/defaulter-gen
-k8s.io/code-generator/cmd/defaulter-gen/args
-k8s.io/code-generator/cmd/go-to-protobuf
-k8s.io/code-generator/cmd/go-to-protobuf/protobuf
-k8s.io/code-generator/cmd/import-boss
-k8s.io/code-generator/cmd/informer-gen
-k8s.io/code-generator/cmd/informer-gen/args
-k8s.io/code-generator/cmd/informer-gen/generators
-k8s.io/code-generator/cmd/lister-gen
-k8s.io/code-generator/cmd/lister-gen/args
-k8s.io/code-generator/cmd/lister-gen/generators
-k8s.io/code-generator/cmd/openapi-gen
-k8s.io/code-generator/cmd/register-gen
-k8s.io/code-generator/cmd/register-gen/args
-k8s.io/code-generator/cmd/register-gen/generators
-k8s.io/code-generator/cmd/set-gen
-k8s.io/code-generator/pkg/namer
-k8s.io/code-generator/pkg/util
-k8s.io/code-generator/third_party/forked/golang/reflect
 # k8s.io/component-base v0.21.2
 ## explicit
 k8s.io/component-base/cli/flag
@@ -935,33 +894,18 @@ k8s.io/component-base/metrics/legacyregistry
 k8s.io/component-base/metrics/prometheus/workqueue
 k8s.io/component-base/metrics/testutil
 k8s.io/component-base/version
-# k8s.io/gengo v0.0.0-20201214224949-b6c5ce23f027
-k8s.io/gengo/args
-k8s.io/gengo/examples/deepcopy-gen/generators
-k8s.io/gengo/examples/defaulter-gen/generators
-k8s.io/gengo/examples/import-boss/generators
-k8s.io/gengo/examples/set-gen/generators
-k8s.io/gengo/examples/set-gen/sets
-k8s.io/gengo/generator
-k8s.io/gengo/namer
-k8s.io/gengo/parser
-k8s.io/gengo/types
 # k8s.io/klog v1.0.0
 ## explicit
 k8s.io/klog
 # k8s.io/klog/v2 v2.8.0
 k8s.io/klog/v2
 # k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
-k8s.io/kube-openapi/cmd/openapi-gen/args
 k8s.io/kube-openapi/pkg/builder
 k8s.io/kube-openapi/pkg/common
-k8s.io/kube-openapi/pkg/generators
-k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/handler
 k8s.io/kube-openapi/pkg/schemaconv
 k8s.io/kube-openapi/pkg/util
 k8s.io/kube-openapi/pkg/util/proto
-k8s.io/kube-openapi/pkg/util/sets
 # k8s.io/utils v0.0.0-20201110183641-67b214c5f920
 k8s.io/utils/buffer
 k8s.io/utils/integer

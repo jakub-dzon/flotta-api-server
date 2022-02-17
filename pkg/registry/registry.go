@@ -28,6 +28,11 @@ type REST struct {
 	*genericregistry.Store
 }
 
+type Storage struct {
+	Main   *REST
+	Status *REST
+}
+
 // RESTInPeace is just a simple function that panics on error.
 // Otherwise returns the given storage object. It is meant to be
 // a wrapper for custom registries.

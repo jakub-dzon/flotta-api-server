@@ -18,7 +18,7 @@ package server
 
 import (
 	"fmt"
-	"github.com/programming-kubernetes/pizza-apiserver/pkg/apis/restaurant/v1beta1"
+	"github.com/jakub-dzon/flotta-apiserver/pkg/apis/v1alpha1"
 	"net"
 
 	"github.com/spf13/cobra"
@@ -27,10 +27,10 @@ import (
 	genericapiserver "k8s.io/apiserver/pkg/server"
 	genericoptions "k8s.io/apiserver/pkg/server/options"
 
-	"github.com/programming-kubernetes/pizza-apiserver/pkg/apiserver"
+	"github.com/jakub-dzon/flotta-apiserver/pkg/apiserver"
 )
 
-const defaultEtcdPathPrefix = "/registry/pizza-apiserver.programming-kubernetes.info"
+const defaultEtcdPathPrefix = "/registry/project-flotta.io"
 
 type CustomServerOptions struct {
 	RecommendedOptions *genericoptions.RecommendedOptions
@@ -40,7 +40,7 @@ func NewCustomServerOptions() *CustomServerOptions {
 	o := &CustomServerOptions{
 		RecommendedOptions: genericoptions.NewRecommendedOptions(
 			defaultEtcdPathPrefix,
-			apiserver.Codecs.LegacyCodec(v1beta1.SchemeGroupVersion),
+			apiserver.Codecs.LegacyCodec(v1alpha1.SchemeGroupVersion),
 		),
 	}
 
@@ -90,6 +90,8 @@ func (o *CustomServerOptions) Config() (*apiserver.Config, error) {
 		return nil, fmt.Errorf("error creating self-signed certificates: %v", err)
 	}
 
+	o.RecommendedOptions.CoreAPI = nil
+	o.RecommendedOptions.Admission = nil
 	serverConfig := genericapiserver.NewRecommendedConfig(apiserver.Codecs)
 	if err := o.RecommendedOptions.ApplyTo(serverConfig); err != nil {
 		return nil, err
@@ -112,11 +114,6 @@ func (o CustomServerOptions) Run(stopCh <-chan struct{}) error {
 	if err != nil {
 		return err
 	}
-
-	server.GenericAPIServer.AddPostStartHook("start-pizza-apiserver-informers", func(context genericapiserver.PostStartHookContext) error {
-		config.GenericConfig.SharedInformerFactory.Start(context.StopCh)
-		return nil
-	})
 
 	return server.GenericAPIServer.PrepareRun().Run(stopCh)
 }

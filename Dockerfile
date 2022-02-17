@@ -13,11 +13,12 @@
 # limitations under the License.
 
 FROM golang:1.16 as build
-WORKDIR /go/src/github.com/programming-kubernetes/pizza-apiserver
+WORKDIR /workspace
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build .
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor  -a -o flotta-apiserver main.go
 
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-COPY --from=build /go/src/github.com/programming-kubernetes/pizza-apiserver/pizza-apiserver /
-ENTRYPOINT ["/pizza-apiserver"]
+FROM gcr.io/distroless/static:nonroot
+COPY --from=build /workspace/flotta-apiserver /
+USER 65532:65532
+
+ENTRYPOINT ["/flotta-apiserver"]

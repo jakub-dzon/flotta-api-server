@@ -17,7 +17,11 @@ limitations under the License.
 package apiserver
 
 import (
-	"github.com/programming-kubernetes/pizza-apiserver/pkg/registry/devices"
+	"github.com/jakub-dzon/flotta-apiserver/pkg/apis/v1alpha1/install"
+	"github.com/jakub-dzon/flotta-apiserver/pkg/registry/edgedeployment"
+	"github.com/jakub-dzon/flotta-apiserver/pkg/registry/edgedevice"
+	"github.com/jakub-dzon/flotta-apiserver/pkg/registry/kine"
+	"github.com/kelseyhightower/envconfig"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -25,15 +29,20 @@ import (
 	"k8s.io/apimachinery/pkg/version"
 	"k8s.io/apiserver/pkg/registry/rest"
 	genericapiserver "k8s.io/apiserver/pkg/server"
-
-	"github.com/programming-kubernetes/pizza-apiserver/pkg/apis/restaurant/install"
-	customregistry "github.com/programming-kubernetes/pizza-apiserver/pkg/registry"
+	"k8s.io/klog"
 )
 
 var (
 	Scheme = runtime.NewScheme()
 	Codecs = serializer.NewCodecFactory(Scheme)
 )
+
+var DBConfig struct {
+	Host     string `envconfig:"HOST" default:"postgres-postgresql.default"`
+	Port     int32  `envconfig:"PORT" default:"5432"`
+	Username string `envconfig:"USERNAME" default:"postgres"`
+	Password string `envconfig:"PASSWORD"`
+}
 
 func init() {
 	install.Install(Scheme)
@@ -103,10 +112,30 @@ func (c completedConfig) New() (*CustomServer, error) {
 		GenericAPIServer: genericServer,
 	}
 
+	err = envconfig.Process("DB", &DBConfig)
+	if err != nil {
+		klog.Fatal(err, "unable to process configuration values")
+	}
+
 	apiGroupInfo := genericapiserver.NewDefaultAPIGroupInfo("management.project-flotta.io", Scheme, metav1.ParameterCodec, Codecs)
 
 	storage := map[string]rest.Storage{}
-	storage["edgedevices"] = customregistry.RESTInPeace(devices.NewREST(Scheme, c.GenericConfig.RESTOptionsGetter))
+	getter, err := kine.NewRESTOptionsGetter(c.GenericConfig.RESTOptionsGetter, DBConfig.Host, DBConfig.Port, DBConfig.Username, DBConfig.Password)
+	if err != nil {
+		return nil, err
+	}
+	edgeDeviceStorage, err := edgedevice.NewREST(Scheme, getter)
+	if err != nil {
+		panic(err)
+	}
+	storage["edgedevices"] = edgeDeviceStorage.Main
+	storage["edgedevices/status"] = edgeDeviceStorage.Status
+
+	edgeDeploymentStorage, err := edgedeployment.NewREST(Scheme, getter)
+	if err != nil {
+		panic(err)
+	}
+	storage["edgedeployments"] = edgeDeploymentStorage.Main
 
 	apiGroupInfo.VersionedResourcesStorageMap["v1alpha1"] = storage
 
