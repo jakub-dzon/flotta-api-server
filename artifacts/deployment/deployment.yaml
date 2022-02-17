@@ -28,7 +28,7 @@ spec:
           - name: DB_USERNAME
             value: "postgres"
           - name: DB_PASSWORD
-            value: "N98azs0gJk"
+            value: "qaU81M3ubo"
         args:
 #        - --etcd-servers=http://localhost:2379
         - --etcd-servers=unix://kine.sock
